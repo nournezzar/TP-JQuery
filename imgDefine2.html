@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Effets Fade & Slide corrigé</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <style>
+    body {
+      text-align: center;
+      margin-top: 50px;
+      font-family: Arial, sans-serif;
+    }
+
+    #defile {
+      width: 300px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    #defile img {
+      width: 100%;
+      display: none; 
+      border-radius: 10px;
+    }
+
+    #defile img.active {
+      display: block;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="defile">
+  <img src="robert.png" class="active">
+  <img src="vader.png">
+  <img src="BERT.png">
+</div>
+
+<div>
+  <button id="fade">Fade</button>
+  <button id="slide">Slide</button>
+</div>
+
+<script>
+$(document).ready(function() {
+  let images = $("#defile img");
+  let index = 0;
+
+  function changerImage(effet) {
+    let ancienne = images.eq(index);
+    index = (index + 1) % images.length;
+    let suivante = images.eq(index);
+
+    
+    ancienne.removeClass("active");
+
+    if (effet === "fade") {
+      ancienne.fadeOut(800, function() {
+        suivante.fadeIn(800, function() {
+          suivante.addClass("active");
+        });
+      });
+    }
+    else if (effet === "slide") {
+      
+      ancienne.slideUp(800, function() {
+        suivante.slideDown(800, function() {
+          suivante.addClass("active");
+        });
+      });
+    }
+  }
+
+  
+  $("#fade").click(() => changerImage("fade"));
+  $("#slide").click(() => changerImage("slide"));
+});
+</script>
+</body>
+</html>

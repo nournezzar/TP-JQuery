@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        header, footer {
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        #bloc {
+            width: 200px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 3px solid red;
+            cursor: pointer;
+        }
+
+        .vert {
+            color: green;
+        }
+
+        .rouge {
+            color: red;
+        }
+
+        span {
+            margin: 0 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            
+            $("#bloc").mouseenter(function() {
+                console.log("Attention, vous entrez dans la zone rouge");
+            });
+
+           
+            $("#bloc").click(function() {
+                $(this).css("border-color", "green");
+                $("header").append('<span class="vert">up</span>');
+            });
+
+            
+            $("#bloc").mouseup(function() {
+                $(this).css("border-color", "red");
+                $("footer").append('<span class="rouge">down</span>');
+            });
+
+            
+            $("header").on("click","span", function() {
+                $(this).remove();
+            });
+
+            $("footer").on("click","span", function() {
+                $(this).remove();
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>Header : </header>
+
+    <div id="bloc">Cliquez ici</div>
+
+    <footer>Footer</footer>
+</body>
+</html>

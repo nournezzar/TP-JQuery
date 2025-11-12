@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire d'inscription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f8f9fa;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            margin-bottom: 10px;
+            vertical-align: top;
+        }
+        input, select, textarea {
+            width: 200px;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        input[type="color"] {
+            width: 50px;
+            padding: 0;
+            border: none;
+        }
+        .invalid {
+            border: 2px solid red;
+        }
+        button {
+            margin-top: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button[type="submit"]:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button[type="reset"] {
+            background-color: #f44336;
+            color: white;
+        }
+        .niveau-label {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        #result {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Formulaire d'inscription</h2>
+    <form id="formInscription">
+        <label for="civilite">État civil</label>
+        <select id="civilite" name="civilite">
+            <option value="M.">M.</option>
+            <option value="Mme">Mme</option>
+        </select><br>
+
+        <label for="nom">Nom</label>
+        <input type="text" id="nom" name="nom"><br>
+
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" name="prenom"><br>
+
+        <label for="nomcomplet">Nom complet</label>
+        <input type="text" id="nomcomplet" name="nomcomplet" readonly><br>
+
+        <label for="date_naissance">Date de naissance</label>
+        <input type="date" id="date_naissance" name="date_naissance"><br>
+
+        <label for="niveau_js">Niveau en JavaScript</label>
+        <input type="range" id="niveau_js" name="niveau_js" min="0" max="10" value="5">
+        <span id="niveau_val" class="niveau-label">5</span><br>
+
+        <label for="couleur">Couleur préférée</label>
+        <input type="color" id="couleur" name="couleur" value="#000000"><br>
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password"><br>
+
+        <label for="password_conf">Mot de passe (confirmation)</label>
+        <input type="password" id="password_conf" name="password_conf"><br>
+
+        <label for="afficher_mdp">Afficher mot de passe</label>
+        <input type="checkbox" id="afficher_mdp" name="afficher_mdp"><br>
+
+        <label for="description">Description</label>
+        <textarea id="description" name="description" rows="3"></textarea><br>
+
+        <button type="reset">Réinitialiser</button>
+        <button type="submit" id="envoyer" disabled>Envoyer</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            // (l) Génération des dates min/max dynamiquement
+            const today = new Date();
+            const maxDate = today.toISOString().split("T")[0];
+            const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate()).toISOString().split("T")[0];
+            $("#date_naissance").attr("min", minDate);
+            $("#date_naissance").attr("max", maxDate);
+
+            // (e) Nom complet auto
+            function majNomComplet() {
+                const civilite = $("#civilite").val();
+                const prenom = $("#prenom").val();
+                const nom = $("#nom").val();
+                $("#nomcomplet").val(`${civilite} ${prenom} ${nom}`.trim());
+            }
+            $("#civilite, #nom, #prenom").on("input change", majNomComplet);
+
+            // (f) Affichage de la valeur du range
+            $("#niveau_js").on("input", function() {
+                $("#niveau_val").text($(this).val());
+            });
+
+            // (g) Afficher/masquer mot de passe
+            $("#afficher_mdp").change(function() {
+                const type = $(this).is(":checked") ? "text" : "password";
+                $("#password, #password_conf").attr("type", type);
+            });
+
+            // (h)(i)(j)(k) Validation du formulaire
+            function verifierChamps() {
+                let toutRempli = true;
+                $("input, textarea, select").each(function() {
+                    const val = $(this).val();
+                    if (!val && $(this).attr("type") !== "checkbox") {
+                        $(this).addClass("invalid");
+                        toutRempli = false;
+                    } else {
+                        $(this).removeClass("invalid");
+                    }
+                });
+
+                // Vérifier correspondance des mots de passe
+                const pass = $("#password").val();
+                const passConf = $("#password_conf").val();
+                if (pass !== passConf || pass === "") {
+                    $("#password_conf").addClass("invalid");
+                    toutRempli = false;
+                } else {
+                    $("#password_conf").removeClass("invalid");
+                }
+
+                $("#envoyer").prop("disabled", !toutRempli);
+            }
+
+            $("input, textarea, select").on("input change", verifierChamps);
+
+            // (m) Soumission du formulaire
+            $("#formInscription").on("submit", function(e) {
+                e.preventDefault();
+                const nomcomplet = $("#nomcomplet").val();
+                const dateNaissance = $("#date_naissance").val();
+                const niveau = $("#niveau_js").val();
+                const couleur = $("#couleur").val();
+                const desc = $("#description").val();
+
+                $(this).hide();
+                $("#result").html(
+                    `<p>Bonjour ${nomcomplet}, vous êtes né(e) le ${dateNaissance},</p>
+                     <p>Votre niveau en JavaScript est ${niveau}/10, et votre couleur préférée est <span style="color:${couleur};">${couleur}</span>.</p>
+                     <p>À propos de vous : ${desc}</p>`
+                );
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Défilement d’images avec effets</title>
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <style>
+    body {
+      text-align: center;
+      margin-top: 50px;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #defile {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    #defile img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 300px;
+      height: 200px;
+      display: none;
+      border-radius: 10px;
+    }
+
+    #defile img.active {
+      display: block;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="defile">
+    <img src="C:\Users\Latitude7480\Desktop\TP JQuery\robert.png" alt="Image 1" class="active">
+    <img src="C:\Users\Latitude7480\Desktop\TP JQuery\robert.png" alt="Image 2">
+    <img src="C:\Users\Latitude7480\Desktop\TP JQuery\robert.png" alt="Image 3">
+  </div>
+
+  <br>
+  <button id="suivant">Suivant</button>
+
+  <script>
+    $(document).ready(function() {
+      let images = $("#defile img");
+      let index = 0;
+      let effet = "rotation"; 
+      let intervalID = setInterval(() => changerImage("auto"), 5000);
+
+      
+      $("#suivant").click(function() {
+        changerImage(this);
+      });
+
+
+      function changerImage(source) {
+        let ancienneImage = images.eq(index);
+        index = (index + 1) % images.length;
+        let nouvelleImage = images.eq(index);
+
+       
+        if (effet === "fade") {
+          
+          ancienneImage.fadeOut(800, function() {
+            nouvelleImage.fadeIn(800);
+          });
+        }
+
+        else if (effet === "slide") {
+          
+          ancienneImage.slideUp(800, function() {
+            nouvelleImage.slideDown(800);
+          });
+        }
+
+        else if (effet === "rotation") {
+          
+          let largeur = $("#defile").width();
+
+          ancienneImage
+            .css({ left: 0 })
+            .animate({ left: -largeur }, 600, function() {
+              $(this).hide();
+            });
+
+          nouvelleImage
+            .css({ left: largeur, display: "block" })
+            .animate({ left: 0 }, 600);
+        }
+
+        
+        if (source === "auto") {
+          console.log("Changement déclenché automatiquement");
+        } else {
+          console.log("Changement déclenché par bouton :", source.id);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

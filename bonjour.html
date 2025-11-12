@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden; 
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        #bonjour {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 200px;
+            font-size: 48px;
+            font-weight: bold;
+            color: royalblue;
+        }
+
+        #btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {     
+            $("#btn").click(function() {
+                let largeur = $(window).width();
+                let Centre = (largeur / 2) - ($("#bonjour").width() / 2);
+                $("#bonjour")
+                    .show()
+                    .css({ left: "-200px" })
+                    .animate({ left: Centre }, 3000);
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <button id="btn">Bienvenue</button>
+    <p id="bonjour">Bonjour</p>
+</body>
+</html>

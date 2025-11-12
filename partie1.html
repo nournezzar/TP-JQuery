@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("p").hover(
+                function() {
+                    $(this).text("ceci n’est pas un paragraphe");
+                },
+                function() {
+                    $(this).text("ceci est un paragraphe");
+                }
+            );
+        });
+    </script>
+</head>
+<body>
+    <p>ceci est un paragraphe</p>
+</body>
+</html>
