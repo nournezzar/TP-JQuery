@@ -121,14 +121,14 @@
     <script>
         $(document).ready(function() {
 
-            // (l) Génération des dates min/max dynamiquement
+            
             const today = new Date();
             const maxDate = today.toISOString().split("T")[0];
             const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate()).toISOString().split("T")[0];
             $("#date_naissance").attr("min", minDate);
             $("#date_naissance").attr("max", maxDate);
 
-            // (e) Nom complet auto
+            
             function majNomComplet() {
                 const civilite = $("#civilite").val();
                 const prenom = $("#prenom").val();
@@ -137,18 +137,18 @@
             }
             $("#civilite, #nom, #prenom").on("input change", majNomComplet);
 
-            // (f) Affichage de la valeur du range
+            
             $("#niveau_js").on("input", function() {
                 $("#niveau_val").text($(this).val());
             });
 
-            // (g) Afficher/masquer mot de passe
+          
             $("#afficher_mdp").change(function() {
                 const type = $(this).is(":checked") ? "text" : "password";
                 $("#password, #password_conf").attr("type", type);
             });
 
-            // (h)(i)(j)(k) Validation du formulaire
+            
             function verifierChamps() {
                 let toutRempli = true;
                 $("input, textarea, select").each(function() {
@@ -161,7 +161,7 @@
                     }
                 });
 
-                // Vérifier correspondance des mots de passe
+               
                 const pass = $("#password").val();
                 const passConf = $("#password_conf").val();
                 if (pass !== passConf || pass === "") {
@@ -176,7 +176,7 @@
 
             $("input, textarea, select").on("input change", verifierChamps);
 
-            // (m) Soumission du formulaire
+            
             $("#formInscription").on("submit", function(e) {
                 e.preventDefault();
                 const nomcomplet = $("#nomcomplet").val();
